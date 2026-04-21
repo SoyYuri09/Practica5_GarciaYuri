@@ -11,20 +11,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import garcia.yuri.pokemonroom.data.DataStoreManager
+import garcia.yuri.pokemonroom.navigation.AppNavigation
 import garcia.yuri.pokemonroom.ui.theme.PokemonRoomTheme
+import garcia.yuri.pokemonroom.viewModel.AuthViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        //Instanciar viewModel
+        val authViewModel = AuthViewModel(DataStoreManager(this))
+
         setContent {
             PokemonRoomTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavigation(authViewModel)
             }
         }
     }

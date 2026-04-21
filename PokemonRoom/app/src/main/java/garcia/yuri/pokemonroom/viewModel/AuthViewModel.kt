@@ -15,7 +15,7 @@ class AuthViewModel(private val dataStore: DataStoreManager) : ViewModel() {
         false
     )
 
-    val username = dataStore.usernameFlow.stateIn(
+    val userName = dataStore.usernameFlow.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         ""
