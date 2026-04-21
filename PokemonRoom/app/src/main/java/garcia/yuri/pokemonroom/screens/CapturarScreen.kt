@@ -67,7 +67,7 @@ fun CapturarScreen(
                 for(pokemon in pokemonViewModel.capturedPokemons){
                     pokemonViewModel.addPokemon(pokemon.name, pokemon.number, pokemon.type)
                 }
-                onBack()
+                onBack() //cuidado con el onBack ya que en teoria cuando regreso y vuelvo a entrar a la pantalla de capturar ahora mismo aparecen los pkemons igual que ya capture y puedo volver a mandar a la bolsa (pero eso no debe ser así leugo corregir)
             }
         ) {
             Text("Enviar a la bolsa")
