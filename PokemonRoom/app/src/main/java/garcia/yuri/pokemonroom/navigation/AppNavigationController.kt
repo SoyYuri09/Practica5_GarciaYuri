@@ -8,8 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import garcia.yuri.pokemonroom.viewModel.AuthViewModel
 import androidx.navigation.compose.composable
+import garcia.yuri.pokemonroom.screens.BolsaScreen
+import garcia.yuri.pokemonroom.screens.CapturarScreen
 import garcia.yuri.pokemonroom.screens.HomeScreen
 import garcia.yuri.pokemonroom.screens.LoginScreen
+import garcia.yuri.pokemonroom.viewModel.PokemonViewModel
 
 sealed class Screen(val route: String){
     object Login : Screen("login")
@@ -20,7 +23,8 @@ sealed class Screen(val route: String){
 
 @Composable
 fun AppNavigation(
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    pokemonViewModel: PokemonViewModel
 ){
     val navController = rememberNavController()
 
@@ -49,7 +53,20 @@ fun AppNavigation(
             HomeScreen(userName,
                 onLogout = {
                     authViewModel.logout()
-                })
+                },
+                onBolsaClick = {
+                    navController.navigate(Screen.Bolsa.route)
+                },
+                onCapturarClick = {
+                    navController.navigate(Screen.Capturar.route)
+                }
+            )
+        }
+        composable(Screen.Bolsa.route){
+            BolsaScreen(pokemonViewModel)
+        }
+        composable(Screen.Capturar.route){
+            CapturarScreen()
         }
     }
 }
