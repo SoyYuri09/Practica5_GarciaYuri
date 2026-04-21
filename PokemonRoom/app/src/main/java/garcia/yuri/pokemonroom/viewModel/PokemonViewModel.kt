@@ -10,14 +10,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 class PokemonViewModel(private val repository: PokemonRepository): ViewModel() {
     //Cambiar para hacerlo con bd
     private val availablePokemons = listOf(
-        PokemonEntity(name = "Zeraora", number = "807", type = "Electric"),
-        PokemonEntity(name = "Lucario", number = "448", type = "Fight"),
-        PokemonEntity(name = "Zoroark", number = "571", type = "Dark")
+        PokemonEntity(name = "Zeraora", number = "807", type = "Eléctrico"),
+        PokemonEntity(name = "Lucario", number = "448", type = "Lucha"),
+        PokemonEntity(name = "Zoroark", number = "571", type = "Siniestro")
     )
     var wildPokemon by mutableStateOf<PokemonEntity?>(null)
         private set
@@ -27,6 +29,29 @@ class PokemonViewModel(private val repository: PokemonRepository): ViewModel() {
 
     var pokemonSeEscapo by mutableStateOf(false)
         private set
+
+    var levelUpFailed by mutableStateOf(false)
+        private set
+
+    var selectedType by mutableStateOf<String?>(null)
+        private set
+
+    var minLevel by mutableStateOf<Int?>(null)
+        private set
+
+    var filteredPokemons by mutableStateOf<List<PokemonEntity>>(emptyList())
+        private set
+
+    var failedPokemonName by mutableStateOf<String?>(null)
+        private set
+
+    fun applyFilters() {
+        viewModelScope.launch {
+            repository.filter(selectedType, minLevel).collect {
+                filteredPokemons = it
+            }
+        }
+    }
 
     fun searchPokemon(){
         wildPokemon = availablePokemons.random()
@@ -49,6 +74,46 @@ class PokemonViewModel(private val repository: PokemonRepository): ViewModel() {
                 wildPokemon = null
             }
         }
+    }
+
+    //Función para eliminar el pokemon
+    fun deletePokemon(pokemon: PokemonEntity){
+        viewModelScope.launch {
+            repository.delete(pokemon)
+        }
+    }
+
+    //Función que permite subir de nivel a un pokemon
+    fun levelUpPokemon(pokemon: PokemonEntity){
+        if(pokemon.level >= 100) return
+
+        val success = (1..100).random()
+
+        if(success <= 70){
+            val updatedPokemon = pokemon.copy(level = pokemon.level + 1)
+            viewModelScope.launch {
+                repository.update(updatedPokemon)
+            }
+            levelUpFailed = false
+            failedPokemonName = null
+        } else {
+            levelUpFailed = true
+            failedPokemonName = pokemon.name
+        }
+    }
+
+    fun onTypeSelected(type: String?) {
+        selectedType = type
+        applyFilters()
+    }
+
+    fun onMinLevelChange(level: String) {
+        minLevel = level.toIntOrNull()
+        applyFilters()
+    }
+
+    init {
+        applyFilters()
     }
 
     val pokemonState: StateFlow<List<PokemonEntity>> = repository.allPokemons
