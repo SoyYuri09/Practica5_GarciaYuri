@@ -10,10 +10,13 @@ kotlin = "2.2.10"
 composeBom = "2024.09.00"
 navigationCompose = "2.9.7"
 roomCommon = "2.8.4"
+roomCompiler = "2.8.4"
 roomKtx = "2.8.4"
+roomRuntime = "2.8.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -30,6 +33,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
