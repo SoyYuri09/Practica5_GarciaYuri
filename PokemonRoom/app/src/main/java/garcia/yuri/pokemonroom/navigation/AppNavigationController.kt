@@ -66,7 +66,7 @@ fun AppNavigation(
             BolsaScreen(pokemonViewModel)
         }
         composable(Screen.Capturar.route){
-            CapturarScreen()
+            CapturarScreen(pokemonViewModel, onBack = { navController.popBackStack() })
         }
     }
 }
