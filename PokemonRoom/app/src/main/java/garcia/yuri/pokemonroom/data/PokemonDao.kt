@@ -18,12 +18,21 @@ interface PokemonDao{
 
     //Query para el buscador de pokemon usando LIKE Y WHERE
     @Query("""
-        SELECT * FROM pokemon_table 
-        WHERE name LIKE '%' || :query || '%' 
-        OR type LIKE '%' || :query || '%'
+        SELECT * FROM pokemon_table
+        WHERE (:type IS NULL OR type = :type)
+        AND (:minLevel IS NULL OR level >= :minLevel)
+        AND (
+            :query IS NULL OR 
+            name LIKE '%' || :query || '%' OR 
+            type LIKE '%' || :query || '%'
+        )
         ORDER BY number ASC
     """)
-    fun searchPokemons(query: String): Flow<List<PokemonEntity>>
+    fun filterAndSearch(
+        type: String?,
+        minLevel: Int?,
+        query: String?
+    ): Flow<List<PokemonEntity>>
 
     //Delete para el listado del pokemon
     @Delete

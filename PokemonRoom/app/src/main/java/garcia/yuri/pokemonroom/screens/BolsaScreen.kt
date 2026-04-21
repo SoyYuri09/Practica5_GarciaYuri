@@ -67,14 +67,20 @@ fun BolsaScreen(
             style = MaterialTheme.typography.headlineLarge
         )
         Spacer(Modifier.height(16.dp))
+        OutlinedTextField(
+            value = pokemonViewModel.searchQuery,
+            onValueChange = { pokemonViewModel.onSearchQueryChange(it) },
+            label = { Text("Buscar por nombre o tipo") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(16.dp))
         if (pokemonViewModel.levelUpFailed && pokemonViewModel.failedPokemonName != null) {
             Text(
                 text = "${pokemonViewModel.failedPokemonName} falló al subir de nivel",
                 color = Color.Red
             )
         }
-
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(16.dp))
 
         //Parte para el filtro de tipo
         Box(modifier = Modifier.fillMaxWidth()) {

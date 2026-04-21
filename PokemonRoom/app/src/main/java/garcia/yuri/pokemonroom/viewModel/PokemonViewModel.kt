@@ -19,7 +19,27 @@ class PokemonViewModel(private val repository: PokemonRepository): ViewModel() {
     private val availablePokemons = listOf(
         PokemonEntity(name = "Zeraora", number = "807", type = "Eléctrico"),
         PokemonEntity(name = "Lucario", number = "448", type = "Lucha"),
-        PokemonEntity(name = "Zoroark", number = "571", type = "Siniestro")
+        PokemonEntity(name = "Zoroark", number = "571", type = "Siniestro"),
+        PokemonEntity(name = "Rockruff", number = "744", type = "Roca"),
+        PokemonEntity(name = "Lycanroc", number = "745", type = "Roca"),
+        PokemonEntity(name = "Zorua", number = "570", type = "Siniestro"),
+        PokemonEntity(name = "Sprigatito", number = "906", type = "Planta"),
+        PokemonEntity(name = "Floragato", number = "907", type = "Planta"),
+        PokemonEntity(name = "Meowscarada", number = "908", type = "Planta"),
+        PokemonEntity(name = "Ralts", number = "280", type = "Psíquico"),
+        PokemonEntity(name = "Gardevoir", number = "282", type = "Psíquico/Hada"),
+        PokemonEntity(name = "Fennekin", number = "653", type = "Fuego"),
+        PokemonEntity(name = "Braixen", number = "654", type = "Fuego"),
+        PokemonEntity(name = "Delphox", number = "655", type = "Fuego"),
+        PokemonEntity(name = "Fletchling", number = "661", type = "Normal"),
+        PokemonEntity(name = "Fletchlinder", number = "662", type = "Fuego"),
+        PokemonEntity(name = "Talonflame", number = "663", type = "Fuego/Volador"),
+        PokemonEntity(name = "Riolu", number = "447", type = "Lucha"),
+        PokemonEntity(name = "Umbreon", number = "197", type = "Siniestro"),
+        PokemonEntity(name = "Greninja", number = "658", type = "Agua"),
+        PokemonEntity(name = "Sylveon", number = "700", type = "Hada"),
+        PokemonEntity(name = "Corviknight", number = "823", type = "Volador"),
+        PokemonEntity(name = "Absol", number = "359", type = "Siniestro")
     )
     var wildPokemon by mutableStateOf<PokemonEntity?>(null)
         private set
@@ -45,9 +65,21 @@ class PokemonViewModel(private val repository: PokemonRepository): ViewModel() {
     var failedPokemonName by mutableStateOf<String?>(null)
         private set
 
+    var searchQuery by mutableStateOf("")
+        private set
+
+    fun onSearchQueryChange(query: String) {
+        searchQuery = query
+        applyFilters()
+    }
+
     fun applyFilters() {
         viewModelScope.launch {
-            repository.filter(selectedType, minLevel).collect {
+            repository.filterAndSearch(
+                selectedType,
+                minLevel,
+                if (searchQuery.isBlank()) null else searchQuery
+            ).collect {
                 filteredPokemons = it
             }
         }

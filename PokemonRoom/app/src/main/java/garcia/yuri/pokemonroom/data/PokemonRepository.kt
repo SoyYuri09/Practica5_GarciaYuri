@@ -17,4 +17,7 @@ class PokemonRepository(private val pokemonDao: PokemonDao){
 
     fun filter(type: String?, minLevel: Int?) =
         pokemonDao.filterPokemons(type, minLevel)
+
+    fun filterAndSearch(type: String?, minLevel: Int?, query: String?) =
+        pokemonDao.filterAndSearch(type, minLevel, query)
 }
